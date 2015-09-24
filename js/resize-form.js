@@ -24,6 +24,9 @@
     imgHeight = previewImage.height;
 
     console.log(imgWidth, imgHeight);
+    
+    previewImage.style.maxWidth = "582px";
+    previewImage.style.maxHeight = "500px";
 
     /* To find min side size if image side > 182 */
     if (imgWidth >= 182 && imgHeight >= 182) {

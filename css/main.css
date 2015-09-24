@@ -89,7 +89,7 @@ body {
   overflow: hidden;
 }
 
-.resize-image-preview,
+/* .resize-image-preview, */
 .filter-image-preview {
   max-width: 582px;
   max-height: 500px;
