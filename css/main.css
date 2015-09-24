@@ -92,6 +92,7 @@ body {
 .resize-image-preview,
 .filter-image-preview {
   max-width: 582px;
+  max-height: 500px;
 }
 
 .filter-chrome {
