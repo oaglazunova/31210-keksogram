@@ -6,15 +6,6 @@
   var previewImage = resizeForm.querySelector('.resize-image-preview');
   var prevButton = resizeForm['resize-prev'];
 
-  prevButton.onclick = function (evt) {
-    evt.preventDefault();
-
-    resizeForm.reset();
-    uploadForm.reset();
-    resizeForm.classList.add('invisible');
-    uploadForm.classList.remove('invisible');
-  };
-
   /* My code */
   var moveX = resizeForm["resize-x"];
   var moveY = resizeForm["resize-y"];
@@ -22,66 +13,71 @@
 
   moveX.value = 0;
   moveY.value = 0;
- // moveX.min = 0;
-//  moveY.min = 0;
-
- // var img = document.getElementById('resize-image-preview');
-  var img = document.getElementById('resize-image-preview');
+  moveX.min = 0;
+  moveY.min = 0;
+ 
   var imgWidth; // width of the uploaded image, in px
   var imgHeight; // height of the uploaded image, in px
-
-  /* find img dimensions, minSideSize, sideSize.value, sideSize.max */
-  img.onload = function (evt) {
-    imgWidth = img.width;
-    imgHeight = img.height;
+ 
+  previewImage.onload = function (evt) {
+    imgWidth = previewImage.width;
+    imgHeight = previewImage.height;
 
     console.log(imgWidth, imgHeight);
 
-    /* to handle situation when uploaded image is small -  */
-    if (imgWidth >= 500 && imgHeight >= 500) {
-      sideSize.min = 182; //default min side length of the cropped area (based on div.pictures.picture images), in px
-      sideSize.value = 500;
-    } else if (imgWidth < 500 || imgHeight < 500) {
-      if (imgWidth >= 182 || imgHeight >= 182) {
-        sideSize.min = 182;
-        sideSize.value = 182;
+    /* To find min side size if image side > 182 */
+    if (imgWidth >= 182 && imgHeight >= 182) {
+      sideSize.min = 182; // min side length of the cropped area (based on div.pictures.picture), from css, in px
+    } else if (imgWidth < 182 || imgHeight < 182) {
+      if (imgWidth > imgHeight) {
+        sideSize.min = imgHeight;
       } else {
-        if (imgWidth > imgHeight) {
-          sideSize.min = imgHeight;
-          sideSize.value = imgHeight;
-        } else {
-          sideSize.min = imgWidth;
-          sideSize.value = imgWidth;
-        }
+        sideSize.min = imgWidth;
       }
     }
-    /* to handle situation when uploaded image is small end */
+    /* To find min side size if image side > 182 end */
 
+    sideSize.value = sideSize.min
+  };
+
+  /* to find moveX.max */
+  moveX.onchange = function (evt) {
+    moveX.max = imgWidth - parseInt(sideSize.value, 10);    
+  };
+  /* to find moveX.max end */
+
+   /* to find moveY.max */
+  moveY.onchange = function (evt) {
+    moveY.max = imgHeight - parseInt(sideSize.value, 10);
+  };
+  /* to find moveY.max end */
+
+   /* to find sideSize.max */
+  sideSize.onchange = function (evt) {    
+    console.log(sideSize.max);
     if (imgHeight > imgWidth) {
       sideSize.max = imgWidth;
     } else {
       sideSize.max = imgHeight;
     }
-
   };
-  /* find img dimensions, minSideSize, sideSize.value, sideSize.max end */
-
-  resizeForm.onchange = function (evt) {
-    moveX.max = imgWidth - parseInt(sideSize.value, 10);
-    moveY.max = imgHeight - parseInt(sideSize.value, 10);
-  };
+  /* to find sideSize.max end */
 
   /* My code end */
 
+  prevButton.onclick = function (evt) {
+    evt.preventDefault();
+    resizeForm.reset();
+    uploadForm.reset();
+    resizeForm.classList.add('invisible');
+    uploadForm.classList.remove('invisible');
+  };
 
   resizeForm.onsubmit = function (evt) {
     evt.preventDefault();
     filterForm.elements['filter-image-src'] = previewImage.src;
-
     resizeForm.classList.add('invisible');
     filterForm.classList.remove('invisible');
   };
-
-
 
 })();
