@@ -1,4 +1,4 @@
-(function() {
+(function () {
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
   var filterForm = document.forms['upload-filter'];
@@ -8,6 +8,20 @@
   var selectedFilter = filterForm['upload-filter'];
 
   var filterMap;
+
+  /* restore from cookies */
+  restoreFormValueFromCookies = function (form) {
+    var element;
+    for (i = 0; i < form.elements.length; i++) {
+      element = form.elements[i];
+      if (docCookies.hasItem(element.id)) {
+        element.checked = docCookies.getItem(element.id);
+        previewImage.className = 'filter-image-preview' + ' ' + filterMap[selectedFilter.value];
+      }
+    }
+  };
+  /* restore from cookies end */
+
 
   function setFilter() {
     if (!filterMap) {
@@ -22,12 +36,12 @@
   };
 
   for (var i = 0, l = selectedFilter.length; i < l; i++) {
-    selectedFilter[i].onchange = function(evt) {
+    selectedFilter[i].onchange = function (evt) {
       setFilter();
     }
   }
 
-  prevButton.onclick = function(evt) {
+  prevButton.onclick = function (evt) {
     evt.preventDefault();
 
     filterForm.reset();
@@ -35,12 +49,30 @@
     resizeForm.classList.remove('invisible');
   };
 
-  filterForm.onsubmit = function() {
+  filterForm.onsubmit = function (evt) {
     evt.preventDefault();
+
+    /* save filter type to cookies */
+    var element;
+    for (i = 0; i < filterForm.elements.length; i++) {
+      element = filterForm.elements[i];
+      if (element.name == "upload-filter" && element.checked == true) {
+        docCookies.setItem(element.id, "checked");
+        console.log(element.id, "checked");
+      } else {
+        docCookies.setItem(element.id, "", -1);
+      }
+    }
+    filterForm.submit();
+
+    /* save filter type to cookies end */
 
     uploadForm.classList.remove('invisible');
     filterForm.classList.add('invisible');
   }
 
   setFilter();
+
+  restoreFormValueFromCookies(filterForm); //restore filter type from cookies 
+
 })();
