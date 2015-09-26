@@ -1,4 +1,7 @@
 (function () {
+  
+  'use strict';
+  
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
   var filterForm = document.forms['upload-filter'];
@@ -10,7 +13,7 @@
   var filterMap;
 
   /* restore from cookies */
-  restoreFormValueFromCookies = function (form) {
+  var restoreFormValueFromCookies = function (form) {
     var element;
     for (i = 0; i < form.elements.length; i++) {
       element = form.elements[i];
@@ -33,12 +36,12 @@
     }
 
     previewImage.className = 'filter-image-preview' + ' ' + filterMap[selectedFilter.value];
-  };
+  }
 
-  for (var i = 0, l = selectedFilter.length; i < l; i++) {
+  for (var i = 0; i < selectedFilter.length; i++) {
     selectedFilter[i].onchange = function (evt) {
       setFilter();
-    }
+    };
   }
 
   prevButton.onclick = function (evt) {
@@ -56,20 +59,18 @@
     var element;
     for (i = 0; i < filterForm.elements.length; i++) {
       element = filterForm.elements[i];
-      if (element.name == "upload-filter" && element.checked == true) {
-        docCookies.setItem(element.id, "checked");
-        console.log(element.id, "checked");
+      if (element.name === "upload-filter" && element.checked === true) {
+        docCookies.setItem(element.id, "checked", "Wed, 19 Feb 2127 01:04:55 GMT");
       } else {
         docCookies.setItem(element.id, "", -1);
       }
     }
     filterForm.submit();
-
     /* save filter type to cookies end */
 
     uploadForm.classList.remove('invisible');
     filterForm.classList.add('invisible');
-  }
+  };
 
   setFilter();
 
