@@ -89,10 +89,9 @@ body {
   overflow: hidden;
 }
 
-/* .resize-image-preview, - removed in order to let the script read width and height of the original, not resized image */
+.resize-image-preview,
 .filter-image-preview {
   max-width: 582px;
-  max-height: 500px;
 }
 
 .filter-chrome {
@@ -244,6 +243,31 @@ input[type=radio]:checked + .upload-filter-label {
   padding-left: 12px;
   text-align: left;
   width: 980px;
+}
+
+.pictures-loading:after,
+.pictures-failure:after {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: #fff;
+  font-size: 30px;
+  margin-left: -100px;
+  left: 50%;
+  padding: 20px;
+  position: absolute;
+  text-align: center;
+  top: 260px;
+  width: 200px;
+  z-index: 2;
+}
+
+.pictures-loading:after {
+  content: 'Загрузка...';
+}
+
+.pictures-failure:after {
+  content: 'Ошибка загрузки';
 }
 
 .picture {
