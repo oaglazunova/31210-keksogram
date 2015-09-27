@@ -1,6 +1,6 @@
 (function () {
   
-  'use strict';
+ 'use strict';
   
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
@@ -24,7 +24,6 @@
     }
   };
   /* restore from cookies end */
-
 
   function setFilter() {
     if (!filterMap) {
@@ -58,9 +57,13 @@
     /* save filter type to cookies */
     var element;
     for (i = 0; i < filterForm.elements.length; i++) {
-      element = filterForm.elements[i];
-      if (element.name === "upload-filter" && element.checked === true) {
-        docCookies.setItem(element.id, "checked", "Wed, 19 Feb 2127 01:04:55 GMT");
+      element = filterForm.elements[i];      
+      if (element.name === "upload-filter" && element.checked === true) {        
+        var dateDiff = new Date - new Date ("Thu, 22 Jul 1982 15:30:00 GMT");              
+        var expDate = new Date;
+        
+        expDate.setTime(Date.now() + dateDiff);        
+        docCookies.setItem(element.id, "checked", expDate);
       } else {
         docCookies.setItem(element.id, "", -1);
       }

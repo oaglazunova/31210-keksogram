@@ -89,7 +89,7 @@ body {
   overflow: hidden;
 }
 
-/* .resize-image-preview, */
+/* .resize-image-preview, - removed in order to let the script read width and height of the original, not resized image */
 .filter-image-preview {
   max-width: 582px;
   max-height: 500px;

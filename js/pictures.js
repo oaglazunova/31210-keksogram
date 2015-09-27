@@ -14,7 +14,6 @@
 
   /* Generate from template */
   var PICTURE_SIDE_LENGTH = "182px";
-  var REQUEST_FAILURE_TIMEOUT = 10000;
 
   var picturesContainer = document.querySelector(".pictures");
   var pictureTemplate = document.getElementById("picture-template");
@@ -30,24 +29,20 @@
 
     if (picture['url']) {
       var newPicture = new Image();
-      newPicture.src = picture["url"];
-
-      var imageLoadTimeout = setTimeout(function () {
-        newPictureElement.classList.add('picture-load-failure');
-      }, REQUEST_FAILURE_TIMEOUT);
-
+      
       newPicture.onload = function () {
         var pictureDummy = newPictureElement.querySelector("img");
         
-        newPictureElement.replaceChild(newPicture, pictureDummy);                                       
+        newPictureElement.replaceChild(newPicture, pictureDummy);
         newPictureElement.style.height = PICTURE_SIDE_LENGTH;
         newPictureElement.style.width = PICTURE_SIDE_LENGTH;
-        clearTimeout(imageLoadTimeout);
       };
 
       newPicture.onerror = function () {
         newPictureElement.classList.add('picture-load-failure');
       };
+      
+      newPicture.src = picture["url"];
     }
   });
   picturesContainer.appendChild(picturesFragment);

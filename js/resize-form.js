@@ -1,21 +1,21 @@
 (function () {
-  
+
   'use strict';
-  
+
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
   var filterForm = document.forms['upload-filter'];
-
+  var prevButton = resizeForm['resize-prev'];  
   var previewImage = resizeForm.querySelector('.resize-image-preview');
-  var prevButton = resizeForm['resize-prev'];
 
   /* My code */
-  var PREVIEW_WIDTH = "582px";
-  var PREVIEW_HEIGHT = "500px";
-  
   var moveX = resizeForm["resize-x"];
   var moveY = resizeForm["resize-y"];
-  var sideSize = resizeForm["resize-size"];
+  var sideSize = resizeForm["resize-size"]; // параметр "сторона" в форме
+  var resizedImg = filterForm.querySelector('.filter-image-preview'), // here .filter-image-preview is used instead of .resize-image-preview in order to let the script read width and height of the original, not resized image. .resize-image-preview parameters are commented out in CSS for the same reason
+    style = window.getComputedStyle(resizedImg),
+    previewMaxWidth = style.getPropertyValue('max-width'),
+    previewMaxHeight = style.getPropertyValue('max-height');  
 
   moveX.value = 0;
   moveY.value = 0;
@@ -23,14 +23,13 @@
   moveY.min = 0;
 
   var imgWidth; // width of the uploaded image, in px
-  var imgHeight; // height of the uploaded image, in px
+  var imgHeight; // height of the uploaded image, in px 
 
   previewImage.onload = function (evt) {
     imgWidth = previewImage.width;
     imgHeight = previewImage.height;
-
-    previewImage.style.maxWidth = PREVIEW_WIDTH; // = filterForm.querySelector(".filter-image-preview").style.maxWidth;
-    previewImage.style.maxHeight = PREVIEW_HEIGHT; // = filterForm.querySelector(".filter-image-preview").style.maxHeight;
+    previewImage.style.maxWidth = previewMaxWidth;
+    previewImage.style.maxHeight = previewMaxHeight;
 
     /* To find min side size if image side < 182 */
     if (imgWidth >= 182 && imgHeight >= 182) {
@@ -43,7 +42,7 @@
       }
     }
     /* To find min side size if image side < 182 end */
-
+    
     sideSize.value = sideSize.min;
   };
 
@@ -73,6 +72,7 @@
 
   prevButton.onclick = function (evt) {
     evt.preventDefault();
+
     resizeForm.reset();
     uploadForm.reset();
     resizeForm.classList.add('invisible');
@@ -81,6 +81,7 @@
 
   resizeForm.onsubmit = function (evt) {
     evt.preventDefault();
+
     filterForm.elements['filter-image-src'] = previewImage.src;
     resizeForm.classList.add('invisible');
     filterForm.classList.remove('invisible');
