@@ -2,7 +2,7 @@
 
   'use strict';
 
-  /* Status for xhr loading */
+  /* Statuses for xhr loading */
   var ReadyState = {
     'UNSENT': 0,
     'OPENED': 1,
@@ -10,17 +10,15 @@
     'LOADING': 3,
     'DONE': 4
   };
-  /* Status for xhr loading end */
+  /* Statuses for xhr loading end */
 
   var hideFilters = function () {
     var filters = document.querySelector(".filters");
-    if (filters.classList.contains("hidden")) {
-      return false;
-    } else {
+    if (!filters.classList.contains("hidden")) {
       filters.classList.add('hidden');
     }
   };
-  hideFilters();
+  //  hideFilters();
 
   /* Generate from template */
   var PICTURE_SIDE_LENGTH = "182px";
@@ -73,7 +71,6 @@
   /* */
 
   /* Загрузите данные из файла data/pictures.json по XMLHttpRequest */
-
   function loadPictures(callback) {
     var xhr = new XMLHttpRequest();
     xhr.timeout = REQUEST_FAILURE_TIMEOUT;
@@ -87,7 +84,9 @@
       case ReadyState.OPENED:
       case ReadyState.HEADERS_RECEIVED:
       case ReadyState.LOADING:
-        picturesContainer.classList.add('pictures-loading'); //Пока длится загрузка файла, покажите прелоадер, добавив класс .pictures-loading блоку .pictures
+        if (!picturesContainer.classList.contains("pictures-loading")) {
+          picturesContainer.classList.add('pictures-loading'); //Пока длится загрузка файла, покажите прелоадер, добавив класс .pictures-loading блоку .pictures
+        }
         break;
 
       case ReadyState.DONE:
@@ -97,7 +96,6 @@
           picturesContainer.classList.remove('pictures-loading'); //Когда загрузка закончится, уберите прелоадер
           callback(JSON.parse(data));
         }
-
         if (loadedXhr.status > 400) {
           showLoadFailure(); // Если загрузка закончится неудачно (ошибкой сервера или таймаутом), покажите предупреждение об ошибке, добавив блоку .pictures класс pictures-failure
         }
@@ -110,10 +108,80 @@
     };
   }
 
+  /* Напишите обработчики событий для фильтров, так, чтобы они сортировали загруженный список фотографий следующим образом:
+Популярные — список фотографий, в том виде, в котором он был загружен
+Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
+Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
+  function filterPictures(pictures, filterID) {
+    var filteredPictures = pictures.slice(0);
+
+    switch (filterID) {
+    case "filter-new":
+      filteredPictures = filteredPictures.sort(function (a, b) {
+        if (a.date < b.date || (b.date && a.date === 0)) {
+          return 1;
+        }
+        if (a.date > b.date || (a.date && b.date === 0)) {
+          return -1;
+        }
+        if (a.date === b.date) {
+          return 0;
+        }
+      });
+      break;
+    case "filter-discussed":
+      filteredPictures = filteredPictures.sort(function (a, b) {
+        if (a.comments < b.comments || (b.comments && a.comments === 0)) {
+          return 1;
+        }
+        if (a.comments > b.comments || (a.comments && b.comments === 0)) {
+          return -1;
+        }
+        if (a.comments === b.comments) {
+          return 0;
+        }
+      });
+      break;
+    default:
+      filteredPictures = filteredPictures.sort(function (a, b) {
+        if (a.likes < b.likes || (b.likes && a.likes === 0)) {
+          return 1;
+        }
+        if (a.likes > b.likes || (a.likes && b.likes === 0)) {
+          return -1;
+        }
+        if (a.likes === b.likes) {
+          return 0;
+        }
+      });
+      break;
+    }
+
+    return filteredPictures;
+  }
+  /* Напишите обработчики... end */
+
+  function initFilters() {
+    var filterElements = document.querySelectorAll(".filters-radio");
+
+    for (var i = 0; i < filterElements.length; i++) {
+      filterElements[i].onclick = function (evt) {
+        var clickedFilter = evt.currentTarget;
+        setActiveFilter(clickedFilter.id);
+      }
+    }
+  }
+
+  function setActiveFilter(filterID) {
+    var filteredPictures = filterPictures(pictures, filterID);
+    renderPictures(filteredPictures);
+  }
+
+  initFilters();
+
   loadPictures(function (loadedPictures) {
     pictures = loadedPictures;
-    renderPictures(loadedPictures);
-   // setActiveFilter('sort-hotels-default');
+    setActiveFilter('filter-popular');
   });
   /* Загрузите данные из файла data/pictures.json по XMLHttpRequest end */
 })();
