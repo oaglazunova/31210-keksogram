@@ -118,41 +118,26 @@
     switch (filterID) {
     case "filter-new":
       filteredPictures = filteredPictures.sort(function (a, b) {
-        if (a.date < b.date || (b.date && a.date === 0)) {
-          return 1;
+        if (a.date < b.date || typeof a.date !== 'string') {
+          return 1; // если значение нечисловое или а меньше б, элемент идёт в конец. Во всех ост. случаях возвращается -1, а проверку на равеносво можно опустить.
         }
-        if (a.date > b.date || (a.date && b.date === 0)) {
-          return -1;
-        }
-        if (a.date === b.date) {
-          return 0;
-        }
+         return -1;
       });
       break;
     case "filter-discussed":
       filteredPictures = filteredPictures.sort(function (a, b) {
-        if (a.comments < b.comments || (b.comments && a.comments === 0)) {
-          return 1;
+        if (typeof a.comments !== 'number') {
+          return 1; // если значение нечисловое, элемент идёт в конец. Для ост. случаев действуех схема для числового сравнения.
         }
-        if (a.comments > b.comments || (a.comments && b.comments === 0)) {
-          return -1;
-        }
-        if (a.comments === b.comments) {
-          return 0;
-        }
+        return b.comments - a.comments; // Для числового сравнения, вместо строкового, функция сравнения может просто вычитать b из a.
       });
       break;
     default:
       filteredPictures = filteredPictures.sort(function (a, b) {
-        if (a.likes < b.likes || (b.likes && a.likes === 0)) {
-          return 1;
+        if (typeof a.likes !== 'number') {
+          return 1; // если значение нечисловое, элемент идёт в конец. Для ост. случаев действуех схема для числового сравнения.
         }
-        if (a.likes > b.likes || (a.likes && b.likes === 0)) {
-          return -1;
-        }
-        if (a.likes === b.likes) {
-          return 0;
-        }
+        return b.likes - a.likes; // Для числового сравнения, вместо строкового, функция сравнения может просто вычитать b из a.
       });
       break;
     }
