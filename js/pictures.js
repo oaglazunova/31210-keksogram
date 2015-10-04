@@ -52,7 +52,13 @@
           newPictureElement.style.height = PICTURE_SIDE_LENGTH;
           newPictureElement.style.width = PICTURE_SIDE_LENGTH;
 
-          var imgLoadDelay = window.setTimeout(newPictureElement.classList.add("picture--ready"), 300); // И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией.
+
+          //
+          window.setTimeout(function() {
+    newPictureElement.classList.add("picture--ready");
+}, 5000);
+          //
+          // var imgLoadDelay = window.setTimeout(newPictureElement.classList.add("picture--ready"), 300); // И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией.
         };
 
         newPicture.onerror = function () {
