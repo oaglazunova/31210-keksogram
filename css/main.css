@@ -280,6 +280,21 @@ input[type=radio]:checked + .upload-filter-label {
   position: relative;
   text-align: center;
   width: 182px;
+  opacity: 0;
+}
+
+.picture--ready {
+  opacity: 1;
+  transition: opacity .5s ease-in-out;
+}
+
+@keyframes picture {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .picture img {

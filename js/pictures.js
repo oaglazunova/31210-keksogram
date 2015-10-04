@@ -51,6 +51,8 @@
           newPictureElement.replaceChild(newPicture, pictureDummy);
           newPictureElement.style.height = PICTURE_SIDE_LENGTH;
           newPictureElement.style.width = PICTURE_SIDE_LENGTH;
+
+          var imgLoadDelay = window.setTimeout(newPictureElement.classList.add("picture--ready"), 300); // И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией.
         };
 
         newPicture.onerror = function () {
@@ -88,7 +90,6 @@
           picturesContainer.classList.add('pictures-loading'); //Пока длится загрузка файла, покажите прелоадер, добавив класс .pictures-loading блоку .pictures
         }
         break;
-
       case ReadyState.DONE:
       default:
         if (loadedXhr.status === 200) {
@@ -119,9 +120,9 @@
     case "filter-new":
       filteredPictures = filteredPictures.sort(function (a, b) {
         if (a.date < b.date || typeof a.date !== 'string') {
-          return 1; // если значение нечисловое или а меньше б, элемент идёт в конец. Во всех ост. случаях возвращается -1, а проверку на равеносво можно опустить.
+          return 1; // если значение нечисловое или а меньше б, элемент идёт в конец. Во всех ост. случаях возвращается -1, а проверку на равенство можно опустить.
         }
-         return -1;
+        return -1;
       });
       break;
     case "filter-discussed":
@@ -142,8 +143,33 @@
       break;
     }
 
+    //
+    /* ..сделанных за последний месяц... */
+    var today = new Date();
+    var imgDate = filteredPictures.date;
+    var timeDiff = Math.abs(Date.parse(today) - Date.parse(imgDate));
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    var img = document.querySelector(".picture");
+    //  console.log(diffDays);
+
+    function isNewEnough(value) {
+      if (filterID === "filter-new") {
+        if (diffDays > 30) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+    filteredPictures = filteredPictures.filter(isNewEnough);
+    /* ..сделанных за последний месяц... end */
+    //
+
     return filteredPictures;
   }
+
   /* Напишите обработчики... end */
 
   function initFilters() {
