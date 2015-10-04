@@ -51,9 +51,11 @@
           newPictureElement.replaceChild(newPicture, pictureDummy);
           newPictureElement.style.height = PICTURE_SIDE_LENGTH;
           newPictureElement.style.width = PICTURE_SIDE_LENGTH;
+          newPictureElement.classList.add("picture--load");
 
           /* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. */
           window.setTimeout(function () {
+            newPictureElement.classList.remove("picture--load");
             newPictureElement.classList.add("picture--ready");
           }, 300);
           /* */
@@ -120,32 +122,23 @@
   function filterPictures(pictures, filterID) {
     var filteredPictures = pictures.slice(0);
 
-     //
-    /* ..сделанных за последний месяц... */
-    var today = new Date();
-    var imgDate = filteredPictures.date;
-    var timeDiff = Math.abs(Date.parse(today) - Date.parse(imgDate));
-    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    var img = document.querySelector(".picture");
+    function imgDateLimit(a) {
+      var imgDate = Date.parse(a.date);
+      var limitDate = new Date().addMonths(-1); // при помощи подключённой библиотеки
 
-    function isNewEnough(value) {
-      if (filterID === "filter-new") {
-        if (diffDays > 30) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
-      }
+      /* альтернативное решение без библиотеки - не строго месяц, а за последние 30 дней:
+      var today = new Date();
+      var timeDiff = today - imgDate;
+      var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      console.log(imgDate, timeDiff, diffDays);
+
+      return diffDays < 30;
+      */
+
     }
-    filteredPictures = filteredPictures.filter(isNewEnough);
-    /* ..сделанных за последний месяц... end */
-    //
-
     switch (filterID) {
     case "filter-new":
-      filteredPictures = filteredPictures.sort(function (a, b) {
+      filteredPictures = filteredPictures.filter(imgDateLimit).sort(function (a, b) {
         if (a.date < b.date || typeof a.date !== 'string') {
           return 1; // если значение нечисловое или а меньше б, элемент идёт в конец. Во всех ост. случаях возвращается -1, а проверку на равенство можно опустить.
         }
