@@ -1,21 +1,20 @@
-(function () {
+'use strict';
 
-  'use strict';
-
+(function() {
   var uploadForm = document.forms['upload-select-image'];
   var resizeForm = document.forms['upload-resize'];
   var filterForm = document.forms['upload-filter'];
-  var prevButton = resizeForm['resize-prev'];  
+  var prevButton = resizeForm['resize-prev'];
   var previewImage = resizeForm.querySelector('.resize-image-preview');
 
   /* My code */
-  var moveX = resizeForm["resize-x"];
-  var moveY = resizeForm["resize-y"];
-  var sideSize = resizeForm["resize-size"]; // параметр "сторона" в форме
+  var moveX = resizeForm['resize-x'];
+  var moveY = resizeForm['resize-y'];
+  var sideSize = resizeForm['resize-size']; // параметр 'сторона' в форме
   var resizedImg = filterForm.querySelector('.filter-image-preview'), // here .filter-image-preview is used instead of .resize-image-preview in order to let the script read width and height of the original, not resized image. .resize-image-preview parameters are commented out in CSS for the same reason
     style = window.getComputedStyle(resizedImg),
     previewMaxWidth = style.getPropertyValue('max-width'),
-    previewMaxHeight = style.getPropertyValue('max-height');  
+    previewMaxHeight = style.getPropertyValue('max-height');
 
   moveX.value = 0;
   moveY.value = 0;
@@ -23,9 +22,9 @@
   moveY.min = 0;
 
   var imgWidth; // width of the uploaded image, in px
-  var imgHeight; // height of the uploaded image, in px 
+  var imgHeight; // height of the uploaded image, in px
 
-  previewImage.onload = function (evt) {
+  previewImage.onload = function(evt) {
     imgWidth = previewImage.width;
     imgHeight = previewImage.height;
     previewImage.style.maxWidth = previewMaxWidth;
@@ -42,24 +41,24 @@
       }
     }
     /* To find min side size if image side < 182 end */
-    
+
     sideSize.value = sideSize.min;
   };
 
   /* to find moveX.max */
-  moveX.onchange = function (evt) {
+  moveX.onchange = function(evt) {
     moveX.max = imgWidth - parseInt(sideSize.value, 10);
   };
   /* to find moveX.max end */
 
   /* to find moveY.max */
-  moveY.onchange = function (evt) {
+  moveY.onchange = function(evt) {
     moveY.max = imgHeight - parseInt(sideSize.value, 10);
   };
   /* to find moveY.max end */
 
   /* to find sideSize.max */
-  sideSize.onchange = function (evt) {
+  sideSize.onchange = function(evt) {
     if (imgHeight > imgWidth) {
       sideSize.max = imgWidth;
     } else {
@@ -70,7 +69,7 @@
 
   /* My code end */
 
-  prevButton.onclick = function (evt) {
+  prevButton.onclick = function(evt) {
     evt.preventDefault();
 
     resizeForm.reset();
@@ -79,7 +78,7 @@
     uploadForm.classList.remove('invisible');
   };
 
-  resizeForm.onsubmit = function (evt) {
+  resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
 
     filterForm.elements['filter-image-src'] = previewImage.src;
