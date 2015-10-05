@@ -24,7 +24,7 @@
   var imgWidth; // width of the uploaded image, in px
   var imgHeight; // height of the uploaded image, in px
 
-  previewImage.onload = function(evt) {
+  previewImage.onload = function() {
     imgWidth = previewImage.width;
     imgHeight = previewImage.height;
     previewImage.style.maxWidth = previewMaxWidth;
@@ -46,19 +46,19 @@
   };
 
   /* to find moveX.max */
-  moveX.onchange = function(evt) {
+  moveX.onchange = function() {
     moveX.max = imgWidth - parseInt(sideSize.value, 10);
   };
   /* to find moveX.max end */
 
   /* to find moveY.max */
-  moveY.onchange = function(evt) {
+  moveY.onchange = function() {
     moveY.max = imgHeight - parseInt(sideSize.value, 10);
   };
   /* to find moveY.max end */
 
   /* to find sideSize.max */
-  sideSize.onchange = function(evt) {
+  sideSize.onchange = function() {
     if (imgHeight > imgWidth) {
       sideSize.max = imgWidth;
     } else {

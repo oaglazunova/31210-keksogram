@@ -26,9 +26,10 @@
   var REQUEST_FAILURE_TIMEOUT = 10000;
 
   var picturesContainer = document.querySelector('.pictures');
-  var pictures;
 
   function renderPictures(pictures) {
+    var pictures;
+
     picturesContainer.classList.remove('picture-load-failure');
     picturesContainer.innerHTML = '';
 

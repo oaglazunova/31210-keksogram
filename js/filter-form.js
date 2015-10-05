@@ -37,7 +37,7 @@
   }
 
   for (var i = 0; i < selectedFilter.length; i++) {
-    selectedFilter[i].onchange = function(evt) {
+    selectedFilter[i].onchange = function() {
       setFilter();
     };
   }
