@@ -282,31 +282,10 @@ input[type=radio]:checked + .upload-filter-label {
   width: 182px;
 }
 
-.picture--load:after {
-  content: 'Загрузка...';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 20px;
-  color: #fff;
-  display: block;
-  z-index: 1;
-}
-
 .picture img {
   border: 0;
   height: 182px;
   margin-bottom: -34px;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-}
-
-.picture--ready img {
-  opacity: 1;
-  transition: opacity .5s ease-in-out;
 }
 
 .picture:nth-of-type(2n-1):nth-of-type(-n+6) {
@@ -380,12 +359,51 @@ input[type=radio]:checked + .upload-filter-label {
   .pictures {
     width: 1380px;
   }
+
   .picture:nth-of-type(2n-1):nth-of-type(-n+6) {
     margin-right: 12px;
   }
+
   .picture:nth-of-type(2),
   .picture:nth-of-type(6),
   .picture:nth-of-type(10) {
     margin-right: 600px;
   }
+}
+
+.gallery-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
+  z-index: 1;
+}
+
+.gallery-overlay-close {
+  color: #fff;
+  cursor: pointer;
+  font-size: 45px;
+  padding: 0 10px;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: -5px;
+}
+
+.gallery-overlay-preview {
+  background: #fff;
+  margin: 30px 0;
+  display: inline-block;
+}
+
+.gallery-overlay-image[src=""] {
+  border: dotted 1px #ddd;
+  display: block;
+  cursor: pointer;
+  height: 640px;
+  width: 640px;
 }
