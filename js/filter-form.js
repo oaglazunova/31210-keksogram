@@ -21,7 +21,7 @@
         previewImage.className = 'filter-image-preview' + ' ' + filterMap[selectedFilter.value];
       }
     }
-  };
+  }
   /* restore from cookies end */
 
   function setFilter() {
