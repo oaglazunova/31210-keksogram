@@ -90,24 +90,24 @@
       var loadedXhr = evt.target;
 
       switch (loadedXhr.readyState) {
-      case ReadyState.OPENED:
-      case ReadyState.HEADERS_RECEIVED:
-      case ReadyState.LOADING:
-        if (!picturesContainer.classList.contains('pictures-loading')) {
-          picturesContainer.classList.add('pictures-loading'); //Пока длится загрузка файла, покажите прелоадер, добавив класс .pictures-loading блоку .pictures
-        }
-        break;
-      case ReadyState.DONE:
-      default:
-        if (loadedXhr.status === 200) {
-          var data = loadedXhr.response;
-          picturesContainer.classList.remove('pictures-loading'); //Когда загрузка закончится, уберите прелоадер
-          callback(JSON.parse(data));
-        }
-        if (loadedXhr.status > 400) {
-          showLoadFailure(); // Если загрузка закончится неудачно (ошибкой сервера или таймаутом), покажите предупреждение об ошибке, добавив блоку .pictures класс pictures-failure
-        }
-        break;
+        case ReadyState.OPENED:
+        case ReadyState.HEADERS_RECEIVED:
+        case ReadyState.LOADING:
+          if (!picturesContainer.classList.contains('pictures-loading')) {
+            picturesContainer.classList.add('pictures-loading'); // Пока длится загрузка файла, покажите прелоадер, добавив класс .pictures-loading блоку .pictures
+          }
+          break;
+        case ReadyState.DONE:
+        default:
+          if (loadedXhr.status === 200) {
+            var data = loadedXhr.response;
+            picturesContainer.classList.remove('pictures-loading'); // Когда загрузка закончится, уберите прелоадер
+            callback(JSON.parse(data));
+          }
+          if (loadedXhr.status > 400) {
+            showLoadFailure(); // Если загрузка закончится неудачно (ошибкой сервера или таймаутом), покажите предупреждение об ошибке, добавив блоку .pictures класс pictures-failure
+          }
+          break;
       }
     };
 
@@ -134,30 +134,30 @@
 
     }
     switch (filterID) {
-    case 'filter-new':
-      filteredPictures = filteredPictures.filter(imgDateLimit).sort(function(a, b) {
-        if (a.date < b.date || typeof a.date !== 'string') {
-          return 1; // если значение нечисловое или а меньше б, элемент идёт в конец. Во всех ост. случаях возвращается -1, а проверку на равенство можно опустить.
-        }
-        return -1;
-      });
-      break;
-    case 'filter-discussed':
-      filteredPictures = filteredPictures.sort(function(a, b) {
-        if (typeof a.comments !== 'number') {
-          return 1; // если значение нечисловое, элемент идёт в конец. Для ост. случаев действуех схема для числового сравнения.
-        }
-        return b.comments - a.comments; // Для числового сравнения, вместо строкового, функция сравнения может просто вычитать b из a.
-      });
-      break;
-    default:
-      filteredPictures = filteredPictures.sort(function(a, b) {
-        if (typeof a.likes !== 'number') {
-          return 1; // если значение нечисловое, элемент идёт в конец. Для ост. случаев действуех схема для числового сравнения.
-        }
-        return b.likes - a.likes; // Для числового сравнения, вместо строкового, функция сравнения может просто вычитать b из a.
-      });
-      break;
+      case 'filter-new':
+        filteredPictures = filteredPictures.filter(imgDateLimit).sort(function(a, b) {
+          if (a.date < b.date || typeof a.date !== 'string') {
+            return 1; // если значение нечисловое или а меньше б, элемент идёт в конец. Во всех ост. случаях возвращается -1, а проверку на равенство можно опустить.
+          }
+          return -1;
+        });
+        break;
+      case 'filter-discussed':
+        filteredPictures = filteredPictures.sort(function(a, b) {
+          if (typeof a.comments !== 'number') {
+            return 1; // если значение нечисловое, элемент идёт в конец. Для ост. случаев действуех схема для числового сравнения.
+          }
+          return b.comments - a.comments; // Для числового сравнения, вместо строкового, функция сравнения может просто вычитать b из a.
+        });
+        break;
+      default:
+        filteredPictures = filteredPictures.sort(function(a, b) {
+          if (typeof a.likes !== 'number') {
+            return 1; // если значение нечисловое, элемент идёт в конец. Для ост. случаев действуех схема для числового сравнения.
+          }
+          return b.likes - a.likes; // Для числового сравнения, вместо строкового, функция сравнения может просто вычитать b из a.
+        });
+        break;
     }
 
     return filteredPictures;
@@ -178,7 +178,7 @@
       filterElements[i].onclick = function(evt) {
         var clickedFilter = evt.currentTarget;
         setActiveFilter(clickedFilter.id);
-      }
+      };
     }
   }
 

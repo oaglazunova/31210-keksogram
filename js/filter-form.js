@@ -12,7 +12,7 @@
   var filterMap;
 
   /* restore from cookies */
-  var restoreFormValueFromCookies = function(form) {
+  function restoreFormValueFromCookies(form) {
     var element;
     for (var i = 0; i < form.elements.length; i++) {
       element = form.elements[i];
