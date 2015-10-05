@@ -28,7 +28,6 @@
   var picturesContainer = document.querySelector('.pictures');
 
   function renderPictures(pictures) {
-    var pictures;
 
     picturesContainer.classList.remove('picture-load-failure');
     picturesContainer.innerHTML = '';
