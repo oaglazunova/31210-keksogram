@@ -124,16 +124,12 @@
 
     function imgDateLimit(a) {
       var imgDate = Date.parse(a.date);
-      var limitDate = new Date().addMonths(-1); // при помощи подключённой библиотеки
-
-      /* альтернативное решение без библиотеки - не строго месяц, а за последние 30 дней:
       var today = new Date();
       var timeDiff = today - imgDate;
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
       console.log(imgDate, timeDiff, diffDays);
 
       return diffDays < 30;
-      */
 
     }
     switch (filterID) {
