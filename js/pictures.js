@@ -102,7 +102,7 @@
           if (loadedXhr.status === 200) {
             var data = loadedXhr.response;
             picturesContainer.classList.remove('pictures-loading'); // Когда загрузка закончится, уберите прелоадер
-            callback(JSON.parse(data));
+            return callback(JSON.parse(data));
           }
           if (loadedXhr.status > 400) {
             showLoadFailure(); // Если загрузка закончится неудачно (ошибкой сервера или таймаутом), покажите предупреждение об ошибке, добавив блоку .pictures класс pictures-failure
