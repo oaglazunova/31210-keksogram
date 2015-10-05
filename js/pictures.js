@@ -165,7 +165,7 @@
 
   /* Напишите обработчики... end */
 
-  function setActiveFilter(filterID) {
+  function setActiveFilter(pictures, filterID) {
     var filteredPictures = filterPictures(pictures, filterID);
 
     renderPictures(filteredPictures);
@@ -184,7 +184,7 @@
 
   initFilters();
 
-  loadPictures(function(loadedPictures) {
+  loadPictures(function(pictures, loadedPictures) {
     pictures = loadedPictures;
     setActiveFilter('filter-popular');
   });
