@@ -58,8 +58,8 @@
     for (i = 0; i < filterForm.elements.length; i++) {
       element = filterForm.elements[i];
       if (element.name === 'upload-filter' && element.checked === true) {
-        var dateDiff = new Date - new Date('Thu, 22 Jul 1982 15:30:00 GMT');
-        var expDate = new Date;
+        var dateDiff = new Date() - new Date('Thu, 22 Jul 1982 15:30:00 GMT');
+        var expDate = new Date();
 
         expDate.setTime(Date.now() + dateDiff);
         docCookies.setItem(element.id, 'checked', expDate);
@@ -76,6 +76,6 @@
 
   setFilter();
 
-  restoreFormValueFromCookies(filterForm); //restore filter type from cookies
+  restoreFormValueFromCookies(filterForm); // restore filter type from cookies
 
 })();

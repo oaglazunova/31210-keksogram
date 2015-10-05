@@ -12,7 +12,7 @@
     fileReader.onload = function(evt) {
       var image = evt.target.result;
       callback(image);
-    }
+    };
 
     fileReader.readAsDataURL(element.files[0]);
   }

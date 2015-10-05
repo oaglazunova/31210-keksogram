@@ -11,13 +11,15 @@
   };
   /* Statuses for xhr loading end */
 
-  var hideFilters = function() {
+  /*
+  function hideFilters() {
     var filters = document.querySelector('.filters');
     if (!filters.classList.contains('hidden')) {
       filters.classList.add('hidden');
     }
   };
-  //  hideFilters();
+  hideFilters();
+  */
 
   /* Generate from template */
   var PICTURE_SIDE_LENGTH = '182px';
@@ -109,7 +111,7 @@
       }
     };
 
-    xhr.ontimeout = function () {
+    xhr.ontimeout = function() {
       showLoadFailure(); // Если загрузка закончится неудачно (ошибкой сервера или таймаутом), покажите предупреждение об ошибке, добавив блоку .pictures класс pictures-failure
     };
   }
@@ -163,6 +165,12 @@
 
   /* Напишите обработчики... end */
 
+  function setActiveFilter(filterID) {
+    var filteredPictures = filterPictures(pictures, filterID);
+
+    renderPictures(filteredPictures);
+  }
+
   function initFilters() {
     var filterElements = document.querySelectorAll('.filters-radio');
 
@@ -172,11 +180,6 @@
         setActiveFilter(clickedFilter.id);
       }
     }
-  }
-
-  function setActiveFilter(filterID) {
-    var filteredPictures = filterPictures(pictures, filterID);
-    renderPictures(filteredPictures);
   }
 
   initFilters();

@@ -1,4 +1,4 @@
-/*\
+/*
 |*|
 |*|  :: cookies.js ::
 |*|
@@ -20,7 +20,8 @@
 |*|  * docCookies.hasItem(name)
 |*|  * docCookies.keys()
 |*|
-\*/
+*/
+'use strict';
 
 var docCookies = {
   getItem: function(sKey) {
@@ -63,7 +64,7 @@ var docCookies = {
     }
     return (new RegExp('(?:^|;\\s*)' + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=')).test(document.cookie);
   },
-  keys: function() {
+  keys: function () {
     var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, '').split(/\s*(?:\=[^;]*)?;\s*/);
     for (var nLen = aKeys.length, nIdx = 0; nIdx < nLen; nIdx++) {
       aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);
