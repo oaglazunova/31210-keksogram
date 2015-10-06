@@ -24,10 +24,14 @@
   /* Generate from template */
   var PICTURE_SIDE_LENGTH = '182px';
   var REQUEST_FAILURE_TIMEOUT = 10000;
+//  var PAGE_SIZE = 12;
 
+ // var currentPage = 0; // хранит значение текуще страницы
   var picturesContainer = document.querySelector('.pictures');
+  var picturesToRender;
 
-  function renderPictures(pictures) {
+  function renderPictures(picturesToRender, pageNumber) {
+    pageNumber = pageNumber || 0; // нормализация аргумента
 
     picturesContainer.classList.remove('picture-load-failure');
     picturesContainer.innerHTML = '';
@@ -35,7 +39,11 @@
     var pictureTemplate = document.getElementById('picture-template');
     var picturesFragment = document.createDocumentFragment();
 
-    pictures.forEach(function(picture) {
+  //  var picturesFrom = pageNumber * PAGE_SIZE;
+  //  var picturesTo = picturesFrom + PAGE_SIZE;
+ //   picturesToRender = filteredPictures.slice(picturesFrom, picturesTo); // hotelsToRender
+
+    picturesToRender.forEach(function(picture) {
       var newPictureElement = pictureTemplate.content.children[0].cloneNode(true);
 
       newPictureElement.querySelector('.picture-comments').textContent = picture['comments'];
@@ -120,8 +128,8 @@
 Популярные — список фотографий, в том виде, в котором он был загружен
 Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
 Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
-  function filterPictures(pictures, filterID) {
-    var filteredPictures = pictures.slice(0);
+  function filterPictures(picturesToRender, filterID) {
+    var filteredPictures = picturesToRender.slice(0);
 
     function imgDateLimit(a) {
       var imgDate = Date.parse(a.date);
@@ -165,10 +173,10 @@
 
   /* Напишите обработчики... end */
 
-  function setActiveFilter(pictures, filterID) {
-    var filteredPictures = filterPictures(pictures, filterID);
+  function setActiveFilter(filterID) { // function setActiveFilter(picturesToRender, filterID) {
+    var filteredPictures = filterPictures(picturesToRender, filterID);
 
-    renderPictures(filteredPictures);
+    renderPictures(filteredPictures); // renderPictures(filteredPictures, currentPage);
   }
 
   function initFilters() {
@@ -184,8 +192,8 @@
 
   initFilters();
 
-  loadPictures(function(pictures, loadedPictures) {
-    pictures = loadedPictures;
+  loadPictures(function(loadedPictures) { // loadPictures(function(picturesToRender, loadedPictures) {
+    picturesToRender = loadedPictures;
     setActiveFilter('filter-popular');
   });
   /* Загрузите данные из файла data/pictures.json по XMLHttpRequest end */
