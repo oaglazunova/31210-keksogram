@@ -24,24 +24,28 @@
   /* Generate from template */
   var PICTURE_SIDE_LENGTH = '182px';
   var REQUEST_FAILURE_TIMEOUT = 10000;
-//  var PAGE_SIZE = 12;
+  var PAGE_SIZE = 12;
+  var IMG_LOAD_TIMEOUT = 300;
 
- // var currentPage = 0; // хранит значение текуще страницы
+  var pageNumber = 0; // хранит значение текуще страницы
   var picturesContainer = document.querySelector('.pictures');
   var picturesToRender;
 
-  function renderPictures(picturesToRender, pageNumber) {
+  function renderPictures(picturesToRender, pageNumber, replace) {
+    replace = typeof replace !== 'undefined' ? replace : true; // тернарный оператор: условие ? если выполняется : если не выполняется
     pageNumber = pageNumber || 0; // нормализация аргумента
 
-    picturesContainer.classList.remove('picture-load-failure');
-    picturesContainer.innerHTML = '';
+    if (replace) {
+      picturesContainer.classList.remove('picture-load-failure');
+      picturesContainer.innerHTML = '';
+    }
 
     var pictureTemplate = document.getElementById('picture-template');
     var picturesFragment = document.createDocumentFragment();
+    var picturesFrom = pageNumber * PAGE_SIZE;
+    var picturesTo = picturesFrom + PAGE_SIZE;
 
-  //  var picturesFrom = pageNumber * PAGE_SIZE;
-  //  var picturesTo = picturesFrom + PAGE_SIZE;
- //   picturesToRender = filteredPictures.slice(picturesFrom, picturesTo); // hotelsToRender
+    picturesToRender = picturesToRender.slice(picturesFrom, picturesTo); // pictures =
 
     picturesToRender.forEach(function(picture) {
       var newPictureElement = pictureTemplate.content.children[0].cloneNode(true);
@@ -66,9 +70,10 @@
           window.setTimeout(function() {
             newPictureElement.classList.remove('picture--load');
             newPictureElement.classList.add('picture--ready');
-          }, 300);
-          /* */
+          }, IMG_LOAD_TIMEOUT);
+          IMG_LOAD_TIMEOUT = IMG_LOAD_TIMEOUT + 100;
         };
+        /* */
 
         newPicture.onerror = function() {
           newPictureElement.classList.add('picture-load-failure');
@@ -136,7 +141,6 @@
       var today = new Date();
       var timeDiff = today - imgDate;
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      console.log(imgDate, timeDiff, diffDays);
 
       return diffDays < 30;
 
@@ -168,6 +172,7 @@
         break;
     }
 
+    localStorage.setItem('filterID', filterID);
     return filteredPictures;
   }
 
@@ -176,25 +181,65 @@
   function setActiveFilter(filterID) { // function setActiveFilter(picturesToRender, filterID) {
     var filteredPictures = filterPictures(picturesToRender, filterID);
 
-    renderPictures(filteredPictures); // renderPictures(filteredPictures, currentPage);
+    renderPictures(filteredPictures, pageNumber, true);
   }
 
+  /*
   function initFilters() {
     var filterElements = document.querySelectorAll('.filters-radio');
 
     for (var i = 0; i < filterElements.length; i++) {
-      filterElements[i].onclick = function(evt) {
+      filterElements[i].addEventListener('click', function(evt) {
         var clickedFilter = evt.currentTarget;
         setActiveFilter(clickedFilter.id);
-      };
+      });
+    }
+  }
+  */
+  function initFilters() {
+    var filtersContainer = document.querySelector('.filters');
+
+    filtersContainer.addEventListener('click', function(evt) {
+      var clickedFilter = evt.target;
+      setActiveFilter(clickedFilter.id);
+    });
+  }
+
+  function isAtTheBottom() {
+    var GAP = 100;
+    return picturesContainer.getBoundingClientRect().bottom - GAP <= window.innerHeight;
+  }
+
+  function isNextPageAvailable() {
+    return pageNumber < Math.ceil(pictures.length / PAGE_SIZE);
+  }
+
+  function checkNextPage() {
+    if (isAtTheBottom() && isNextPageAvailable()) {
+      window.dispatchEvent(new CustomEvent('loadneeded'));
     }
   }
 
+  function initScroll() {
+    var scrollTimeout;
+
+    window.addEventListener('scroll', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(checkNextPage, 100); // throttle - функция вызывается раз в 100 мс
+    });
+
+    window.addEventListener('loadneeded', function() {
+      renderPictures(currentPictures, pageNumber++, false);
+    });
+  }
+
   initFilters();
+  initScroll();
 
   loadPictures(function(loadedPictures) { // loadPictures(function(picturesToRender, loadedPictures) {
     picturesToRender = loadedPictures;
-    setActiveFilter('filter-popular');
+    setActiveFilter(localStorage.getItem('filterID') || 'filter-popular'); // setActiveFilter('filter-popular');
   });
   /* Загрузите данные из файла data/pictures.json по XMLHttpRequest end */
+
 })();
