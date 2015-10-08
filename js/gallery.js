@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
   var Key = {
     'ESC': 27,
     'LEFT': 37,
@@ -11,7 +11,8 @@
   var galleryElement = document.querySelector('.gallery-overlay');
   var closeBtn = galleryElement.querySelector('.gallery-overlay-close');
 
-  function doesHaveParent(element, className) {
+  /*
+    function doesHaveParent(element, className) {
     do {
       if (element.classList.contains(className)) {
         return !element.classList.contains('picture-load-failure');
@@ -22,6 +23,7 @@
 
     return false;
   }
+  */
 
   function hideGallery() {
     galleryElement.classList.add('invisible');
@@ -36,17 +38,17 @@
 
   function keyHandler(evt) {
     switch (evt.keyCode) {
-    case Key.LEFT:
-      console.log('show previous photo');
-      break;
-    case Key.RIGHT:
-      console.log('show next photo');
-      break;
-    case Key.ESC:
-      hideGallery();
-      break;
-    default:
-      break;
+      case Key.LEFT:
+        console.log('show previous photo');
+        break;
+      case Key.RIGHT:
+        console.log('show next photo');
+        break;
+      case Key.ESC:
+        hideGallery();
+        break;
+      default:
+        break;
     }
   }
 
@@ -56,12 +58,11 @@
     document.body.addEventListener('keydown', keyHandler);
   }
 
-  picturesContainer.addEventListener('click', function (evt) {
+  picturesContainer.addEventListener('click', function(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-
     // console.log('Click', evt.target, evt.currentTarget);
-    if (evt.target.tagName === 'IMG') { // (doesHaveParent(evt.target, '.pictures')) { - я не понимаю, почему этот код не работает.
+    if (evt.target.tagName === 'IMG') { // (doesHaveParent(evt.target, '.pictures')) { - я не понимаю, почему этот код не работает. И почему IMG дб прописными буквами.
       showGallery();
     }
   });
