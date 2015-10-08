@@ -30,8 +30,8 @@
   var picturesContainer = document.querySelector('.pictures');
   var picturesToRender;
 
-  function renderPictures(picturesToRender, pageNumber) {
-
+  function renderPictures(items, pageNumber) {
+    items = picturesToRender;
     pageNumber = pageNumber || 0; // нормализация аргумента
 
     picturesContainer.classList.remove('picture-load-failure');
@@ -40,7 +40,7 @@
     var pictureTemplate = document.getElementById('picture-template');
     var picturesFragment = document.createDocumentFragment();
 
-    picturesToRender.forEach(function(picture) {
+    items.forEach(function(picture) {
       var newPictureElement = pictureTemplate.content.children[0].cloneNode(true);
 
       newPictureElement.querySelector('.picture-comments').textContent = picture['comments'];
@@ -126,7 +126,7 @@
 Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
 Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
   function filterPictures(itemsToRender, filterID) {
-    var itemsToRender = picturesToRender;
+    itemsToRender = picturesToRender;
     var filteredPictures = itemsToRender.slice(0);
 
     function imgDateLimit(a) {
