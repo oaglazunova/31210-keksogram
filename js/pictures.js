@@ -31,6 +31,7 @@
   var picturesToRender;
 
   function renderPictures(picturesToRender, pageNumber) {
+
     pageNumber = pageNumber || 0; // нормализация аргумента
 
     picturesContainer.classList.remove('picture-load-failure');
@@ -38,10 +39,6 @@
 
     var pictureTemplate = document.getElementById('picture-template');
     var picturesFragment = document.createDocumentFragment();
-
-  //  var picturesFrom = pageNumber * PAGE_SIZE;
-  //  var picturesTo = picturesFrom + PAGE_SIZE;
- //   picturesToRender = filteredPictures.slice(picturesFrom, picturesTo); // hotelsToRender
 
     picturesToRender.forEach(function(picture) {
       var newPictureElement = pictureTemplate.content.children[0].cloneNode(true);
@@ -128,8 +125,9 @@
 Популярные — список фотографий, в том виде, в котором он был загружен
 Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
 Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
-  function filterPictures(picturesToRender, filterID) {
-    var filteredPictures = picturesToRender.slice(0);
+  function filterPictures(itemsToRender, filterID) {
+    var itemsToRender = picturesToRender;
+    var filteredPictures = itemsToRender.slice(0);
 
     function imgDateLimit(a) {
       var imgDate = Date.parse(a.date);
