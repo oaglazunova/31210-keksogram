@@ -18,7 +18,7 @@
       }
       element = element.parentElement;
     }
-      while (element);
+    while (element);
 
     return false;
   }
@@ -36,16 +36,17 @@
 
   function keyHandler(evt) {
     switch (evt.keyCode) {
-      case Key.LEFT:
-        console.log('show previous photo');
-        break;
-      case Key.RIGHT:
-        console.log('show next photo');
-        break;
-      case Key.ESC:
-        hideGallery();
-        break;
-      default: break;
+    case Key.LEFT:
+      console.log('show previous photo');
+      break;
+    case Key.RIGHT:
+      console.log('show next photo');
+      break;
+    case Key.ESC:
+      hideGallery();
+      break;
+    default:
+      break;
     }
   }
 
@@ -55,8 +56,12 @@
     document.body.addEventListener('keydown', keyHandler);
   }
 
-  picturesContainer.addEventListener('click', function(evt) {
-    if (doesHaveParent(evt.target, '.picture')) {
+  picturesContainer.addEventListener('click', function (evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    // console.log('Click', evt.target, evt.currentTarget);
+    if (evt.target.tagName === 'IMG') { // (doesHaveParent(evt.target, '.pictures')) { - я не понимаю, почему этот код не работает.
       showGallery();
     }
   });
