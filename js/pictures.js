@@ -30,8 +30,7 @@
   var picturesContainer = document.querySelector('.pictures');
   var picturesToRender;
 
-  function renderPictures(items, pageNumber) {
-    items = picturesToRender;
+  function renderPictures(items, pageNumber) { // function renderPictures(picturesToRender, pageNumber) {
     pageNumber = pageNumber || 0; // нормализация аргумента
 
     picturesContainer.classList.remove('picture-load-failure');
@@ -125,8 +124,7 @@
 Популярные — список фотографий, в том виде, в котором он был загружен
 Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
 Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
-  function filterPictures(itemsToRender, filterID) {
-    itemsToRender = picturesToRender;
+  function filterPictures(itemsToRender, filterID) { // function filterPictures(picturesToRender, filterID) {
     var filteredPictures = itemsToRender.slice(0);
 
     function imgDateLimit(a) {
