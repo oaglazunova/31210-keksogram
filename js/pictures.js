@@ -136,7 +136,6 @@
       var today = new Date();
       var timeDiff = today - imgDate;
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      console.log(imgDate, timeDiff, diffDays);
 
       return diffDays < 30;
 
