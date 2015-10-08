@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function() {
   var Key = {
     'ESC': 27,
     'LEFT': 37,
