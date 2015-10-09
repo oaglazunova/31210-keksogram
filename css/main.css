@@ -259,7 +259,7 @@ input[type=radio]:checked + .upload-filter-label {
   text-align: center;
   top: 260px;
   width: 200px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .pictures-loading:after {
@@ -282,9 +282,8 @@ input[type=radio]:checked + .upload-filter-label {
   width: 182px;
 }
 
-/*
 .picture--load:after {
- content: 'Загрузка...';
+  content: 'Загрузка...';
   position: absolute;
   top: 50%;
   left: 0;
@@ -295,14 +294,12 @@ input[type=radio]:checked + .upload-filter-label {
   display: block;
   z-index: 1;
 }
-*/
 
 .picture img {
   border: 0;
   height: 182px;
   margin-bottom: -34px;
-  /*
-position: relative;
+  position: relative;
   z-index: 2;
   opacity: 0;
 }
@@ -310,7 +307,6 @@ position: relative;
 .picture--ready img {
   opacity: 1;
   transition: opacity .5s ease-in-out;
-  */
 }
 
 .picture:nth-of-type(2n-1):nth-of-type(-n+6) {
@@ -337,6 +333,8 @@ position: relative;
   display: none;
   line-height: 24px;
   padding: 0 10px;
+  position: relative;
+  z-index: 5;
 }
 
 .picture:hover .picture-stats {
@@ -403,7 +401,7 @@ position: relative;
   right: 0;
   text-align: center;
   top: 0;
-  z-index: 1;
+  z-index: 4;
 }
 
 .gallery-overlay-close {
