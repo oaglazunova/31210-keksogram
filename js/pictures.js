@@ -30,7 +30,6 @@
   var currentPage = 0; // хранит значение текущей страницы
   var picturesContainer = document.querySelector('.pictures');
   var picturesToRender;
-  var loadTimeout;
   var filteredPictures;
 
   /* Перепишите функцию вывода списка фотографий таким образом, чтобы она отрисовывала не все доступные изображения, а постранично:
@@ -72,14 +71,12 @@
           newPictureElement.style.height = PICTURE_SIDE_LENGTH;
           newPictureElement.style.width = PICTURE_SIDE_LENGTH;
           newPictureElement.classList.add('picture--load');
+
 /* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. */
-          function addLoadTimeout() {
-            loadTimeout = setTimeout(function() {
-              newPictureElement.classList.remove('picture--load');
-              newPictureElement.classList.add('picture--ready');
-            }, imgLoadTimeout);
-          }
-          addLoadTimeout();
+          setTimeout(function() {
+            newPictureElement.classList.remove('picture--load');
+            newPictureElement.classList.add('picture--ready');
+          }, imgLoadTimeout);
           /* */
         };
 
@@ -144,7 +141,7 @@
 Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
 Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
   function filterPictures(itemsToRender, filterID) {
-    var filteredPictures = itemsToRender.slice(0);
+    filteredPictures = itemsToRender.slice(0);
 
     function imgDateLimit(a) {
       var imgDate = Date.parse(a.date);
@@ -192,7 +189,7 @@
 После переключения фильтра, выбранное значение должно сохраняться в localStorage и использоваться как значение по умолчанию при следующей загрузке. */
 
   function setActiveFilter(filterID) { // function setActiveFilter(picturesToRender, filterID) {
-    var filteredPictures = filterPictures(picturesToRender, filterID);
+    filteredPictures = filterPictures(picturesToRender, filterID);
     currentPage = 0;
 
     renderPictures(filteredPictures, currentPage, true);
@@ -215,7 +212,6 @@
   /* */
 
   function isNextPageAvailable() {
-    console.log(filteredPictures);
     return currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE); // return currentPage < Math.ceil(pictures.length / PAGE_SIZE);
   }
 
@@ -231,7 +227,6 @@
 
     window.addEventListener('loadneeded', function() {
       renderPictures(filteredPictures, currentPage++, false);
-      console.log(picturesToRender);
     });
 
     window.addEventListener('scroll', function() {
