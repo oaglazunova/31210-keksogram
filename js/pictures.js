@@ -30,21 +30,14 @@
   var currentPage = 0; // хранит значение текущей страницы
   var picturesContainer = document.querySelector('.pictures');
   var picturesToRender;
-
-  /* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. */
-
   var loadTimeout;
-
-  function clearLoadTimeout() {
-    clearTimeout(loadTimeout);
-  }
-  /* */
+  var filteredPictures;
 
   /* Перепишите функцию вывода списка фотографий таким образом, чтобы она отрисовывала не все доступные изображения, а постранично:
 Каждая страница состоит максимум из 12 фотографий (последняя может содержать меньше).
 Сделайте так, чтобы функция могла работать в двух режимах: добавления страницы и перезаписи содержимого контейнера. */
-
   function renderPictures(items, pageNumber, replace) {
+    IMG_LOAD_TIMEOUT = 300;
     replace = typeof replace !== 'undefined' ? replace : true; // тернарный оператор: условие ? если выполняется : если не выполняется
     pageNumber = pageNumber || 0; // нормализация аргумента
 
@@ -85,7 +78,6 @@
               newPictureElement.classList.remove('picture--load');
               newPictureElement.classList.add('picture--ready');
             }, imgLoadTimeout);
-         // console.log(imgLoadTimeout);
           }
           addLoadTimeout();
           /* */
@@ -201,6 +193,7 @@
 
   function setActiveFilter(filterID) { // function setActiveFilter(picturesToRender, filterID) {
     var filteredPictures = filterPictures(picturesToRender, filterID);
+    currentPage = 0;
 
     renderPictures(filteredPictures, currentPage, true);
   }
@@ -222,7 +215,8 @@
   /* */
 
   function isNextPageAvailable() {
-    return currentPage < Math.ceil(picturesToRender.length / PAGE_SIZE); // return currentPage < Math.ceil(pictures.length / PAGE_SIZE);
+    console.log(filteredPictures);
+    return currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE); // return currentPage < Math.ceil(pictures.length / PAGE_SIZE);
   }
 
   function checkNextPage() {
@@ -235,14 +229,14 @@
   function initScroll() {
     var scrollTimeout;
 
+    window.addEventListener('loadneeded', function() {
+      renderPictures(filteredPictures, currentPage++, false);
+      console.log(picturesToRender);
+    });
+
     window.addEventListener('scroll', function() {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(checkNextPage, 100); // throttle - функция вызывается раз в 100 мс
-    });
-
-    window.addEventListener('loadneeded', function() {
-      renderPictures(picturesToRender, currentPage++, false);
-      console.log(picturesToRender);
     });
   }
   /* */
