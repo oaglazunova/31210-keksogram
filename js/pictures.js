@@ -24,18 +24,35 @@
   /* Generate from template */
   var PICTURE_SIDE_LENGTH = '182px';
   var REQUEST_FAILURE_TIMEOUT = 10000;
+  var PAGE_SIZE = 12;
+  var IMG_LOAD_TIMEOUT = 300;
 
+  var currentPage = 0; // хранит значение текущей страницы
   var picturesContainer = document.querySelector('.pictures');
+  var picturesToRender;
+  var filteredPictures;
 
-  function renderPictures(pictures) {
+  /* Перепишите функцию вывода списка фотографий таким образом, чтобы она отрисовывала не все доступные изображения, а постранично:
+Каждая страница состоит максимум из 12 фотографий (последняя может содержать меньше).
+Сделайте так, чтобы функция могла работать в двух режимах: добавления страницы и перезаписи содержимого контейнера. */
+  function renderPictures(items, pageNumber, replace) {
+    replace = typeof replace !== 'undefined' ? replace : true; // тернарный оператор: условие ? если выполняется : если не выполняется
+    pageNumber = pageNumber || 0; // нормализация аргумента
+    IMG_LOAD_TIMEOUT = 300;
 
-    picturesContainer.classList.remove('picture-load-failure');
-    picturesContainer.innerHTML = '';
+    if (replace) {
+      picturesContainer.classList.remove('picture-load-failure');
+      picturesContainer.innerHTML = '';
+    }
 
     var pictureTemplate = document.getElementById('picture-template');
     var picturesFragment = document.createDocumentFragment();
+    var picturesFrom = pageNumber * PAGE_SIZE;
+    var picturesTo = picturesFrom + PAGE_SIZE;
 
-    pictures.forEach(function(picture) {
+    items = items.slice(picturesFrom, picturesTo); // pictures =
+
+    items.forEach(function(picture) {
       var newPictureElement = pictureTemplate.content.children[0].cloneNode(true);
 
       newPictureElement.querySelector('.picture-comments').textContent = picture['comments'];
@@ -44,6 +61,7 @@
       picturesFragment.appendChild(newPictureElement);
 
       if (picture['url']) {
+        var imgLoadTimeout = IMG_LOAD_TIMEOUT;
         var newPicture = new Image();
 
         newPicture.onload = function() {
@@ -54,11 +72,11 @@
           newPictureElement.style.width = PICTURE_SIDE_LENGTH;
           newPictureElement.classList.add('picture--load');
 
-          /* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. */
-          window.setTimeout(function() {
+/* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. */
+          setTimeout(function() {
             newPictureElement.classList.remove('picture--load');
             newPictureElement.classList.add('picture--ready');
-          }, 300);
+          }, imgLoadTimeout);
           /* */
         };
 
@@ -67,6 +85,8 @@
         };
 
         newPicture.src = picture['url'];
+
+        IMG_LOAD_TIMEOUT = IMG_LOAD_TIMEOUT + 100;
       }
     });
     picturesContainer.appendChild(picturesFragment);
@@ -120,19 +140,18 @@
 Популярные — список фотографий, в том виде, в котором он был загружен
 Новые — список фотографий, сделанных за последний месяц, отсортированные по убыванию даты (поле date).
 Обсуждаемые — отсортированные по убыванию количества комментариев (поле comments) */
-  function filterPictures(pictures, filterID) {
-    var filteredPictures = pictures.slice(0);
+  function filterPictures(itemsToRender, filterID) {
+    filteredPictures = itemsToRender.slice(0);
 
     function imgDateLimit(a) {
       var imgDate = Date.parse(a.date);
       var today = new Date();
       var timeDiff = today - imgDate;
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      console.log(imgDate, timeDiff, diffDays);
 
       return diffDays < 30;
-
     }
+
     switch (filterID) {
       case 'filter-new':
         filteredPictures = filteredPictures.filter(imgDateLimit).sort(function(a, b) {
@@ -160,33 +179,72 @@
         break;
     }
 
+    localStorage.setItem('filterID', filterID);
+
     return filteredPictures;
   }
 
   /* Напишите обработчики... end */
 
-  function setActiveFilter(pictures, filterID) {
-    var filteredPictures = filterPictures(pictures, filterID);
+  /* После переключения фильтра, должна показываться первая страница (тут-то вам и пригодится режим перезаписи контейнера в функции вывода фотографий).
+После переключения фильтра, выбранное значение должно сохраняться в localStorage и использоваться как значение по умолчанию при следующей загрузке. */
 
-    renderPictures(filteredPictures);
+  function setActiveFilter(filterID) { // function setActiveFilter(picturesToRender, filterID) {
+    filteredPictures = filterPictures(picturesToRender, filterID);
+    currentPage = 0;
+
+    renderPictures(filteredPictures, currentPage, true);
   }
 
   function initFilters() {
-    var filterElements = document.querySelectorAll('.filters-radio');
+    var filtersContainer = document.querySelector('.filters');
 
-    for (var i = 0; i < filterElements.length; i++) {
-      filterElements[i].onclick = function(evt) {
-        var clickedFilter = evt.currentTarget;
-        setActiveFilter(clickedFilter.id);
-      };
+    filtersContainer.addEventListener('click', function(evt) {
+      var clickedFilter = evt.target;
+      setActiveFilter(clickedFilter.id);
+    });
+  }
+
+/* Добавьте новый обработчик кастомного события «достижения низа страницы», который будет отображать следующую страницу. */
+  function isAtTheBottom() {
+    var GAP = 100;
+    return picturesContainer.getBoundingClientRect().bottom - GAP <= window.innerHeight;
+  }
+  /* */
+
+  function isNextPageAvailable() {
+    return currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE); // return currentPage < Math.ceil(pictures.length / PAGE_SIZE);
+  }
+
+  function checkNextPage() {
+    if (isAtTheBottom() && isNextPageAvailable()) {
+      window.dispatchEvent(new CustomEvent('loadneeded'));
     }
   }
 
-  initFilters();
+  /* Оптимизируйте обработчик события scroll с помощью таймаута, который срабатывает каждые 100 миллисекунд и испускает кастомное событие «достижения низа страницы». Переключение страницы из scroll уберите. */
+  function initScroll() {
+    var scrollTimeout;
 
-  loadPictures(function(pictures, loadedPictures) {
-    pictures = loadedPictures;
-    setActiveFilter('filter-popular');
+    window.addEventListener('loadneeded', function() {
+      currentPage++;
+      renderPictures(filteredPictures, currentPage, false);
+    });
+
+    window.addEventListener('scroll', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(checkNextPage, 100); // throttle - функция вызывается раз в 100 мс
+    });
+  }
+  /* */
+
+  initFilters();
+  initScroll();
+
+  loadPictures(function(loadedPictures) { // loadPictures(function(picturesToRender, loadedPictures) {
+    picturesToRender = loadedPictures;
+    setActiveFilter(localStorage.getItem('filterID') || 'filter-popular'); // setActiveFilter('filter-popular');
   });
   /* Загрузите данные из файла data/pictures.json по XMLHttpRequest end */
+
 })();
