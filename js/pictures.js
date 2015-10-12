@@ -36,9 +36,9 @@
 Каждая страница состоит максимум из 12 фотографий (последняя может содержать меньше).
 Сделайте так, чтобы функция могла работать в двух режимах: добавления страницы и перезаписи содержимого контейнера. */
   function renderPictures(items, pageNumber, replace) {
-    IMG_LOAD_TIMEOUT = 300;
     replace = typeof replace !== 'undefined' ? replace : true; // тернарный оператор: условие ? если выполняется : если не выполняется
     pageNumber = pageNumber || 0; // нормализация аргумента
+    IMG_LOAD_TIMEOUT = 300;
 
     if (replace) {
       picturesContainer.classList.remove('picture-load-failure');
@@ -180,6 +180,7 @@
     }
 
     localStorage.setItem('filterID', filterID);
+
     return filteredPictures;
   }
 
@@ -226,7 +227,8 @@
     var scrollTimeout;
 
     window.addEventListener('loadneeded', function() {
-      renderPictures(filteredPictures, currentPage++, false);
+      currentPage++;
+      renderPictures(filteredPictures, currentPage, false);
     });
 
     window.addEventListener('scroll', function() {
