@@ -1,3 +1,5 @@
+/* global Photo: true */
+
 'use strict';
 
 (function() {
@@ -22,10 +24,8 @@
   */
 
   /* Generate from template */
- // var PICTURE_SIDE_LENGTH = '182px';
   var REQUEST_FAILURE_TIMEOUT = 10000;
   var PAGE_SIZE = 12;
-  var IMG_LOAD_TIMEOUT = 300;
 
   var currentPage = 0; // хранит значение текущей страницы
   var picturesContainer = document.querySelector('.pictures');
@@ -38,7 +38,6 @@
   function renderPictures(items, pageNumber, replace) {
     replace = typeof replace !== 'undefined' ? replace : true; // тернарный оператор: условие ? если выполняется : если не выполняется
     pageNumber = pageNumber || 0; // нормализация аргумента
-    IMG_LOAD_TIMEOUT = 300;
 
     if (replace) {
       picturesContainer.classList.remove('picture-load-failure');
