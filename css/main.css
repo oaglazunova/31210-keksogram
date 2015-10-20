@@ -282,6 +282,7 @@ input[type=radio]:checked + .upload-filter-label {
   width: 182px;
 }
 
+/*
 .picture--load:after {
   content: 'Загрузка...';
   position: absolute;
@@ -294,19 +295,23 @@ input[type=radio]:checked + .upload-filter-label {
   display: block;
   z-index: 1;
 }
+*/
 
 .picture img {
   border: 0;
   height: 182px;
   margin-bottom: -34px;
   position: relative;
+/*
   z-index: 2;
   opacity: 0;
+    
 }
 
-.picture--ready img {
+.picture--ready img {    
   opacity: 1;
   transition: opacity .5s ease-in-out;
+*/
 }
 
 .picture:nth-of-type(2n-1):nth-of-type(-n+6) {

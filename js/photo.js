@@ -2,7 +2,6 @@
 'use strict';
 
 (function() {
-  var IMG_LOAD_TIMEOUT = 300;
   var PICTURE_SIDE_LENGTH = '182px';
   var pictureTemplate = document.getElementById('picture-template');
 
@@ -27,7 +26,7 @@
     container.appendChild(newPictureElement);
 
     if (this._data['url']) {
-      var imgLoadTimeout = IMG_LOAD_TIMEOUT;
+     // var imgLoadTimeout = IMG_LOAD_TIMEOUT;
       var newPicture = new Image();
 
       newPicture.onload = function() {
@@ -36,14 +35,15 @@
         newPictureElement.replaceChild(newPicture, pictureDummy);
         newPictureElement.style.height = PICTURE_SIDE_LENGTH;
         newPictureElement.style.width = PICTURE_SIDE_LENGTH;
-        newPictureElement.classList.add('picture--load');
+        // newPictureElement.classList.add('picture--load');
+        newPictureElement.classList.add('picture--ready');
 
-        /* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. */
+        /* И факультативно, т.к. не видно процесса загрузки, добавь принудительный setTimeout при загрузке, например, на 300ms. И что бы картинки появлялись плавно. Изменять им нулевой opacity на 1 css анимацией. 
         setTimeout(function() {
           newPictureElement.classList.remove('picture--load');
           newPictureElement.classList.add('picture--ready');
         }, imgLoadTimeout);
-        /* */
+         */
       };
 
       newPicture.onerror = function() {
@@ -52,7 +52,7 @@
 
       newPicture.src = this._data['url'];
 
-      IMG_LOAD_TIMEOUT = IMG_LOAD_TIMEOUT + 100;
+     // IMG_LOAD_TIMEOUT = IMG_LOAD_TIMEOUT + 100;
     }
 
     this._element = newPictureElement;

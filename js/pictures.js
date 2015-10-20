@@ -162,7 +162,8 @@
     filteredPictures = filterPictures(picturesToRender, filterID);
     currentPage = 0;
 
-    renderPictures(filteredPictures, currentPage, true);
+    renderPictures(filteredPictures, currentPage, true);      
+    checkSpace();
   }
 
   function initFilters() {
@@ -206,13 +207,19 @@
     });
   }
   /* */
+    function checkSpace() {
+    if (picturesContainer.getBoundingClientRect().bottom < window.innerHeight) {
+      renderPictures(filteredPictures, currentPage++, false);
+    }
+  }
 
   initFilters();
   initScroll();
 
   loadPictures(function(loadedPictures) { // loadPictures(function(picturesToRender, loadedPictures) {
     picturesToRender = loadedPictures;
-    setActiveFilter(localStorage.getItem('filterID') || 'filter-popular'); // setActiveFilter('filter-popular');
+    setActiveFilter(localStorage.getItem('filterID') || 'filter-popular'); // setActiveFilter('filter-popular');      
+    checkSpace();
   });
   /* Загрузите данные из файла data/pictures.json по XMLHttpRequest end */
 
